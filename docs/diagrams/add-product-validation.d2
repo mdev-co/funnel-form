@@ -1,0 +1,65 @@
+direction: down
+vars: {
+  d2-config: {
+    theme-id: 8
+    pad: 40
+  }
+}
+
+title: |md
+  # Add product: validation at the form boundary
+  One Zod schema per step for "Dalej", one for "Zapisz produkt", one file for the price arithmetic.
+| {near: top-center}
+
+step_check: "1. Dalej: the current step only" {
+  style.fill: "#fef3c7"
+  style.stroke: "#92400e"
+  values: "values of the current step\n(text and numbers from the inputs)" {shape: oval; style.fill: "#fde68a"}
+  schema: "step schema\nproductBasicsSchema / productPricingSchema / productAvailabilitySchema\nmessages in *_MESSAGES next to the schema" {style.fill: "#fbbf24"}
+  issues: "issues: path + message\nshown under the matching field" {shape: page; style.fill: "#fecaca"}
+  next: "step + 1\nvalues of every step stay in the one form instance" {shape: cylinder; style.fill: "#fde68a"}
+  values -> schema: "safeParse"
+  schema -> issues: "invalid"
+  schema -> next: "valid"
+}
+
+prices: "2. Step 2: linked price fields" {
+  style.fill: "#eff6ff"
+  style.stroke: "#1e40af"
+  net: "netPrice input" {shape: oval; style.fill: "#dbeafe"}
+  gross: "grossPrice input" {shape: oval; style.fill: "#dbeafe"}
+  vat: "vatRate select" {shape: oval; style.fill: "#dbeafe"}
+  calc: "lib/price.ts\ngrossFromNet, netFromGross\nroundMoney: two decimals, Number.EPSILON" {style.fill: "#93c5fd"}
+  other: "the other price field\nreceives the rounded value" {shape: cylinder; style.fill: "#dbeafe"}
+  net -> calc: "edit"
+  gross -> calc: "edit"
+  vat -> calc: "change"
+  calc -> other
+}
+
+save: "3. Zapisz produkt: everything again" {
+  style.fill: "#ecfdf5"
+  style.stroke: "#065f46"
+  all: "values of the three steps" {shape: oval; style.fill: "#d1fae5"}
+  full: "addProductSchema\nthree shapes + applyAvailabilityRules\n(the same cross-field rules as step 3)" {style.fill: "#6ee7b7"}
+  product: "Product (readonly)\nappended to the products state" {shape: cylinder; style.fill: "#d1fae5"}
+  toast: "toast: Produkt został dodany\ndialog closes and resets to step 1" {style.fill: "#34d399"}
+  all -> full: "safeParse"
+  full -> product: "valid"
+  product -> toast
+}
+
+step_check -> prices: "step 2"
+prices -> save: "step 3 valid"
+
+rules: "Rules" {
+  style.fill: "#f1f5f9"
+  style.stroke: "#334155"
+  r: |md
+    - Zod runs only at the form boundary; mocks and Product are typed, never parsed
+    - cross-field rules (stock when limited, min not above max) live once in applyAvailabilityRules
+    - every message is a named constant next to its schema
+    - prices: multipleOf(0.01) on input, arithmetic and rounding only in lib/price.ts (ADR 0002)
+  |
+}
+save -> rules: "" {style.stroke-dash: 3}
