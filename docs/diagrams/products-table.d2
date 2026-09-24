@@ -1,0 +1,56 @@
+direction: down
+vars: {
+  d2-config: {
+    theme-id: 8
+    pad: 40
+  }
+}
+
+title: |md
+  # Products table: page number lives in the URL
+  One hook reads and writes ?page, one pure function turns it into rows.
+| {near: top-center}
+
+url_to_state: "1. URL -> state (nuqs)" {
+  style.fill: "#fef3c7"
+  style.stroke: "#92400e"
+  address: "Browser address bar\n/?page=2 (string)" {shape: oval; style.fill: "#fde68a"}
+  adapter: "NuqsAdapter (app/layout.tsx)\nconnects nuqs to the Next router" {style.fill: "#fbbf24"}
+  hook: "useQueryState('page', parseAsInteger.withDefault(1))\nin ProductsView ('use client', inside <Suspense>)" {style.fill: "#fbbf24"}
+  page: "page: number\nmissing param -> 1" {shape: cylinder; style.fill: "#fde68a"}
+  address -> adapter: "read"
+  adapter -> hook
+  hook -> page: "parse int"
+}
+
+state_to_rows: "2. state -> rows (products module)" {
+  style.fill: "#ecfdf5"
+  style.stroke: "#065f46"
+  products: "products: readonly Product[]\nuseState(MOCK_PRODUCTS)" {shape: cylinder; style.fill: "#d1fae5"}
+  paginate: "paginate(items, page, PAGE_SIZE = 5)\nlib/paginate.ts, pure, unit-tested\nclamps page to 1..pageCount" {style.fill: "#6ee7b7"}
+  result: "{ items, page, pageCount }" {style.fill: "#a7f3d0"}
+  table: "ProductsTable\nCOLUMNS config -> <TableRow> per item\nformatPrice(gross, currency) via Intl" {style.fill: "#34d399"}
+  pagination: "ProductsPagination\nsummary + Wstecz / 1 2 / Dalej buttons" {style.fill: "#34d399"}
+  click: "click Dalej\nonPageChange(page + 1) -> setPage" {shape: oval; style.fill: "#d1fae5"}
+  write: "address bar becomes /?page=3\nhistory.replaceState, no reload,\nhook re-renders with the new page" {shape: cylinder; style.fill: "#d1fae5"}
+  products -> paginate
+  paginate -> result
+  result -> table: "items"
+  result -> pagination: "page, pageCount"
+  pagination -> click
+  click -> write: "writes"
+}
+
+url_to_state -> state_to_rows: "page"
+
+rules: "Rules" {
+  style.fill: "#f1f5f9"
+  style.stroke: "#334155"
+  r: |md
+    - page from the URL is clamped to 1..pageCount (typing ?page=99 shows the last page)
+    - ?page=1 is removed from the URL (clearOnDefault), so the default view has a clean address
+    - the component reading the URL sits inside Suspense: Next prerenders the page statically
+    - buttons, not links: a full reload would drop products added in memory
+  |
+}
+state_to_rows -> rules: "" {style.stroke-dash: 3}
