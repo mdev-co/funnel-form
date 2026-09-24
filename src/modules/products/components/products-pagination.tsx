@@ -1,5 +1,7 @@
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { PaginationEllipsis } from '@/components/ui/pagination';
+import { paginationItems } from '../lib/pagination-items';
 
 const PAGINATION_TEXT = {
   label: 'Paginacja',
@@ -9,9 +11,6 @@ const PAGINATION_TEXT = {
     `Strona ${page} z ${pageCount} · ${total} produktów`,
 };
 
-const pageNumbers = (pageCount: number) =>
-  Array.from({ length: pageCount }, (_, index) => index + 1);
-
 type PageButtonsProps = {
   readonly page: number;
   readonly pageCount: number;
@@ -19,17 +18,21 @@ type PageButtonsProps = {
 };
 
 const PageButtons = ({ page, pageCount, onPageChange }: PageButtonsProps) =>
-  pageNumbers(pageCount).map((number) => (
-    <Button
-      key={number}
-      variant={number === page ? 'default' : 'ghost'}
-      size="icon"
-      aria-current={number === page ? 'page' : undefined}
-      onClick={() => onPageChange(number)}
-    >
-      {number}
-    </Button>
-  ));
+  paginationItems(page, pageCount).map((item) =>
+    item.kind === 'gap' ? (
+      <PaginationEllipsis key={item.position} />
+    ) : (
+      <Button
+        key={item.page}
+        variant={item.page === page ? 'default' : 'ghost'}
+        size="icon"
+        aria-current={item.page === page ? 'page' : undefined}
+        onClick={() => onPageChange(item.page)}
+      >
+        {item.page}
+      </Button>
+    ),
+  );
 
 type ProductsPaginationProps = PageButtonsProps & {
   readonly total: number;
@@ -41,10 +44,7 @@ export const ProductsPagination = ({
   total,
   onPageChange,
 }: ProductsPaginationProps) => (
-  <nav
-    aria-label={PAGINATION_TEXT.label}
-    className="text-muted-foreground flex items-center justify-between text-sm"
-  >
+  <nav aria-label={PAGINATION_TEXT.label} className="flex items-center justify-between text-sm">
     <span className="text-muted-foreground text-xs">
       {PAGINATION_TEXT.summary(page, pageCount, total)}
     </span>
