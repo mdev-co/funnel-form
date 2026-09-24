@@ -1,5 +1,5 @@
 import { APP_LOCALE } from '@/lib/locale';
-import type { Currency } from '../types/product';
+import type { Currency } from '../model/product';
 
 const PRICE_FORMAT: Intl.NumberFormatOptions = { style: 'currency', currencyDisplay: 'code' };
 

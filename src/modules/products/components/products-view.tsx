@@ -6,7 +6,7 @@ import { parseAsInteger, useQueryState } from 'nuqs';
 import { Button } from '@/components/ui/button';
 import { MOCK_PRODUCTS } from '../data/mock-products';
 import { paginate } from '../lib/paginate';
-import type { Product } from '../types/product';
+import type { Product } from '../model/product';
 import { ProductsPagination } from './products-pagination';
 import { ProductsTable } from './products-table';
 
@@ -24,7 +24,7 @@ export function ProductsView() {
     'page',
     parseAsInteger.withDefault(1).withOptions({ clearOnDefault: true }),
   );
-  const current = paginate(products, page, PAGE_SIZE);
+  const currentPage = paginate(products, page, PAGE_SIZE);
 
   return (
     <section className="flex flex-col gap-6">
@@ -39,11 +39,11 @@ export function ProductsView() {
         </Button>
       </header>
       <div className="bg-card overflow-hidden rounded-lg border">
-        <ProductsTable products={current.items} />
+        <ProductsTable products={currentPage.items} />
         <footer className="border-t bg-gray-50 p-4">
           <ProductsPagination
-            page={current.page}
-            pageCount={current.pageCount}
+            page={currentPage.page}
+            pageCount={currentPage.pageCount}
             total={products.length}
             onPageChange={(next) => void setPage(next)}
           />

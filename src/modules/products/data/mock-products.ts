@@ -1,4 +1,4 @@
-import type { Product } from '../types/product';
+import type { Product } from '../model/product';
 
 export const MOCK_PRODUCTS: readonly Product[] = [
   {

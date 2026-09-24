@@ -10,7 +10,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { formatPrice } from '../lib/format-price';
-import type { Product } from '../types/product';
+import type { Product } from '../model/product';
 
 type ProductColumn = {
   readonly key: string;
@@ -22,12 +22,12 @@ type ProductColumn = {
 
 type Availability = 'available' | 'unavailable';
 
-type AvailabilityStyle = {
+type BadgeContent = {
   readonly label: string;
   readonly variant: 'success' | 'destructive';
 };
 
-const AVAILABILITY: Record<Availability, AvailabilityStyle> = {
+const AVAILABILITY_BADGE: Record<Availability, BadgeContent> = {
   available: { label: 'Dostępny', variant: 'success' },
   unavailable: { label: 'Niedostępny', variant: 'destructive' },
 };
@@ -73,8 +73,8 @@ type AvailabilityBadgeProps = {
 };
 
 function AvailabilityBadge({ available }: AvailabilityBadgeProps) {
-  const style = AVAILABILITY[available ? 'available' : 'unavailable'];
-  return <Badge variant={style.variant}>{style.label}</Badge>;
+  const badge = AVAILABILITY_BADGE[available ? 'available' : 'unavailable'];
+  return <Badge variant={badge.variant}>{badge.label}</Badge>;
 }
 
 type ProductsTableProps = {
