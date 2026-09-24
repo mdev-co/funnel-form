@@ -1,0 +1,2 @@
+# Rendered diagrams are build output of the .d2 sources: collapse them in diffs and stats.
+docs/diagrams/*.svg linguist-generated=true
