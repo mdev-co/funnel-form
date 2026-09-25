@@ -1,11 +1,12 @@
 import { z } from 'zod';
 
-const QUANTITY_MIN = 1;
+export const QUANTITY_MIN = 1;
 
 export const AVAILABILITY_MESSAGES = {
   stockRequired: 'Podaj ilość na magazynie',
   stockNegative: 'Ilość nie może być ujemna',
   stockInteger: 'Ilość musi być liczbą całkowitą',
+  quantityRequired: 'Podaj ilość',
   quantityInteger: 'Ilość musi być liczbą całkowitą',
   quantityTooSmall: `Ilość musi wynosić co najmniej ${QUANTITY_MIN}`,
   minAboveMax: 'Minimalna ilość nie może być większa niż maksymalna',
@@ -20,11 +21,11 @@ const availabilityShape = {
     .nonnegative(AVAILABILITY_MESSAGES.stockNegative)
     .nullable(),
   minCartQuantity: z
-    .number()
+    .number({ error: AVAILABILITY_MESSAGES.quantityRequired })
     .int(AVAILABILITY_MESSAGES.quantityInteger)
     .min(QUANTITY_MIN, AVAILABILITY_MESSAGES.quantityTooSmall),
   maxCartQuantity: z
-    .number()
+    .number({ error: AVAILABILITY_MESSAGES.quantityRequired })
     .int(AVAILABILITY_MESSAGES.quantityInteger)
     .min(QUANTITY_MIN, AVAILABILITY_MESSAGES.quantityTooSmall),
 };

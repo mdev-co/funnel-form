@@ -1,0 +1,52 @@
+direction: down
+vars: {
+  d2-config: {
+    theme-id: 8
+    pad: 40
+  }
+}
+
+title: |md
+  # Add product: one form instance, steps as data, bound fields
+  The values of every step live in one TanStack Form instance, "Dalej" checks the current step only, a field on screen is one bound component.
+| {near: top-center}
+
+owner: "1. Who owns the values" {
+  style.fill: "#dbeafe"
+  style.stroke: "#1e3a8a"
+  view: "ProductsView\nlist of products in React state" {style.fill: "#bfdbfe"}
+  dialog: "AddProductDialog\ncalls useAddProductForm()" {style.fill: "#bfdbfe"}
+  form: "form: one TanStack Form instance\nvalues of all 15 fields + meta per field\nstepIndex in React state next to it" {shape: cylinder; style.fill: "#93c5fd"}
+  views: "BasicsStep, PricingStep, AvailabilityStep\nonly the current one is on screen\neach reads and writes its own fields" {style.fill: "#bfdbfe"}
+  view -> dialog: "open, onSave"
+  dialog -> form: "creates once"
+  form -> views: "props: form"
+  views -> form: "field.handleChange"
+}
+
+next: "2. Dalej: the current step only" {
+  style.fill: "#fef3c7"
+  style.stroke: "#92400e"
+  values: "form.state.values" {shape: oval; style.fill: "#fde68a"}
+  schema: "STEPS[stepIndex].schema.safeParse(values)\nthe step schema ignores the other steps' keys" {style.fill: "#fbbf24"}
+  map: "issuesByField(error)\nfield -> first message" {shape: page; style.fill: "#fecaca"}
+  errormap: "form.setErrorMap({ onSubmit: { fields } })\nmessages land in each field's meta" {style.fill: "#fecaca"}
+  advance: "setStepIndex(index + 1)" {style.fill: "#bbf7d0"}
+  values -> schema
+  schema -> map: "invalid"
+  map -> errormap
+  schema -> advance: "valid"
+}
+
+field: "3. One field on screen" {
+  style.fill: "#ede9fe"
+  style.stroke: "#5b21b6"
+  appfield: "form.AppField name=sku\nregisters the field, provides it through fieldContext" {style.fill: "#ddd6fe"}
+  component: "field.TextField label=SKU\nuseFieldContext(): name, value, handleChange, errors" {style.fill: "#ddd6fe"}
+  frame: "FieldFrame\nFieldLabel + control + FieldError\ndata-invalid on the wrapper, aria-invalid on the control" {style.fill: "#c4b5fd"}
+  appfield -> component: "context"
+  component -> frame: "renders"
+}
+
+owner -> next: "click Dalej"
+next -> field: "errors shown under the mounted fields"
