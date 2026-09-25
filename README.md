@@ -33,7 +33,8 @@ Data flow diagrams live in [`docs/diagrams`](docs/diagrams) (`.d2` sources rende
 
 ### Products table
 
-Five products from the task, five rows per page. The page number lives in the URL (`?page=2`) through
+Five products from the task, five rows per page. The current page number is kept in the address
+bar as a query parameter (for example `/?page=2`) through
 nuqs, so a refresh or a shared link opens the same page; a number past the end falls back to the last
 page. Counts use Polish plural forms (`1 produkt`, `2 produkty`, `5 produktów`) via `Intl.PluralRules`.
 
@@ -53,6 +54,8 @@ dialog (X or Esc) resets it to step one; clicking outside does not close it. Net
 VAT rate keep each other in sync. On small screens the dialog is a full-screen sheet.
 
 ![Add product dialog, step 1](docs/screenshots/add-product-step-1.png)
+
+![Add product dialog on a phone](docs/screenshots/add-product-mobile.png)
 
 ## Validation rules
 

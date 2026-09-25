@@ -26,7 +26,11 @@ url_to_state: "1. URL -> state (nuqs)" {
 state_to_rows: "2. state -> rows (products module)" {
   style.fill: "#ecfdf5"
   style.stroke: "#065f46"
-  products: "products: readonly Product[]\nuseState(MOCK_PRODUCTS)" {shape: cylinder; style.fill: "#d1fae5"}
+  storage: "localStorage\nkey funnel-form.products (JSON text)" {shape: oval; style.fill: "#d1fae5"}
+  products: "useProducts()\nuseSyncExternalStore: mock products on the server,\nstored list in the browser, parsed with productListSchema" {shape: cylinder; style.fill: "#d1fae5"}
+  save: "Zapisz produkt -> addProduct\nwrites the whole list back, notifies subscribers" {shape: oval; style.fill: "#d1fae5"}
+  storage -> products: "read, validated with Zod"
+  save -> storage: "write"
   paginate: "paginate(items, page, PAGE_SIZE = 5)\nlib/paginate.ts, pure, unit-tested\nclamps page to 1..pageCount" {style.fill: "#6ee7b7"}
   result: "{ items, page, pageCount }" {style.fill: "#a7f3d0"}
   table: "ProductsTable\nCOLUMNS config -> <TableRow> per item\nformatPrice(gross, currency) via Intl" {style.fill: "#34d399"}
@@ -50,7 +54,8 @@ rules: "Rules" {
     - page from the URL is clamped to 1..pageCount (typing ?page=99 shows the last page)
     - ?page=1 is removed from the URL (clearOnDefault), so the default view has a clean address
     - the component reading the URL sits inside Suspense: Next prerenders the page statically
-    - buttons, not links: a full reload would drop products added in memory
+    - the list persists in localStorage, so a reload or a typed address keeps added products (ADR 0004)
+    - stored data that fails the product schema falls back to the five mock products
   |
 }
 state_to_rows -> rules: "" {style.stroke-dash: 3}
