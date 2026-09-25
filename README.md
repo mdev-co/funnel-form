@@ -31,6 +31,24 @@ Data flow diagrams live in [`docs/diagrams`](docs/diagrams) (`.d2` sources rende
 - [Add product: validation at the form boundary](docs/diagrams/add-product-validation.svg)
 - [Add product: one form instance, steps as data, bound fields](docs/diagrams/add-product-form.svg)
 
+### Products table
+
+Five products from the task, five rows per page. The page number lives in the URL (`?page=2`) through
+nuqs, so a refresh or a shared link opens the same page; a number past the end falls back to the last
+page. Counts use Polish plural forms (`1 produkt`, `2 produkty`, `5 produktów`) via `Intl.PluralRules`.
+
+![Products table](docs/screenshots/products-table.png)
+
+### Add product dialog
+
+One TanStack Form instance holds the values of all three steps, so "Wstecz" keeps what was typed.
+"Dalej" validates only the current step with its Zod schema and shows the messages under the fields;
+"Zapisz produkt" validates the whole product, appends it to the table and shows a toast. Closing the
+dialog (X or Esc) resets it to step one; clicking outside does not close it. Net price, gross price and
+VAT rate keep each other in sync. On small screens the dialog is a full-screen sheet.
+
+![Add product dialog, step 1](docs/screenshots/add-product-step-1.png)
+
 ## Validation rules
 
 Every rule from the task, where it lives and the test that proves it (`src/modules/add-product`).

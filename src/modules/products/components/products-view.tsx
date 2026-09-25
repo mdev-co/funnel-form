@@ -12,6 +12,7 @@ import { paginate } from '../lib/paginate';
 import type { Product } from '../model/product';
 import { ProductsPagination } from './products-pagination';
 import { ProductsTable } from './products-table';
+import { formatProductCount } from '../lib/format-product-count';
 
 const PAGE_SIZE = 5;
 
@@ -19,7 +20,7 @@ const VIEW_TEXT = {
   title: 'Produkty',
   addProduct: 'Dodaj produkt',
   productAdded: 'Produkt został dodany',
-  catalogSize: (count: number) => `${count} produktów w katalogu`,
+  catalogSize: (count: number) => `${formatProductCount(count)} w katalogu`,
 };
 
 export function ProductsView() {
