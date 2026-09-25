@@ -130,6 +130,14 @@ describe('productAvailabilitySchema', () => {
       message: AVAILABILITY_MESSAGES.minAboveMax,
     });
   });
+
+  it('rejects an empty cart quantity with a readable message', () => {
+    const empty = { ...validAvailability, minCartQuantity: null };
+    expect(firstIssue(productAvailabilitySchema.safeParse(empty))).toEqual({
+      path: 'minCartQuantity',
+      message: AVAILABILITY_MESSAGES.quantityRequired,
+    });
+  });
 });
 
 describe('addProductSchema', () => {
