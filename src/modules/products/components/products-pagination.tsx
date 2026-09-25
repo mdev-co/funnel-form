@@ -45,7 +45,10 @@ export const ProductsPagination = ({
   total,
   onPageChange,
 }: ProductsPaginationProps) => (
-  <nav aria-label={PAGINATION_TEXT.label} className="flex items-center justify-between text-sm">
+  <nav
+    aria-label={PAGINATION_TEXT.label}
+    className="flex flex-col items-center gap-3 text-sm md:flex-row md:justify-between"
+  >
     <span className="text-muted-foreground text-xs">
       {PAGINATION_TEXT.summary(page, pageCount, total)}
     </span>

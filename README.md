@@ -43,7 +43,12 @@ typed into the address bar. Stored data is parsed with the product Zod schema on
 or outdated data falls back to the five mock products. This is a demo choice: in production the
 list would live in a database behind an API (see [ADR 0004](docs/adr/0004-products-persist-in-local-storage.md)).
 
+On phones the same list is shown as cards (name, SKU, availability, then category, gross price and
+stock), with the pagination centred below; from the `md` breakpoint it is the table from the design.
+
 ![Products table](docs/screenshots/products-table.png)
+
+![Products list on a phone](docs/screenshots/products-mobile.png)
 
 ### Add product dialog
 
