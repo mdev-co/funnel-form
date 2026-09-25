@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { CURRENCIES, VAT_RATES } from '@/modules/products/model/product';
 
-const PRICE_STEP = 0.01;
+export const PRICE_STEP = 0.01;
 
 export const PRICING_MESSAGES = {
   priceTooPrecise: 'Cena może mieć najwyżej dwa miejsca po przecinku',

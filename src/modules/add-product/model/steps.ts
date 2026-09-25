@@ -41,6 +41,9 @@ export const STEPS: readonly FormStep[] = [
 export const FIRST_STEP_INDEX = 0;
 export const LAST_STEP_INDEX = STEPS.length - 1;
 
+export const stepIndexOfFields = (fieldNames: ReadonlySet<string>): number =>
+  STEPS.findIndex((step) => step.fields.some((name) => fieldNames.has(name)));
+
 export const stepAt = (index: number): FormStep => {
   const step = STEPS[index];
   if (!step) {

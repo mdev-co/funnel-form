@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import { Toaster } from '@/components/ui/sonner';
 import './globals.css';
 
 const geistSans = Geist({ variable: '--font-sans', subsets: ['latin', 'latin-ext'] });
@@ -21,6 +22,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
     >
       <body className="bg-background flex min-h-full flex-col">
         <NuqsAdapter>{children}</NuqsAdapter>
+        <Toaster position="bottom-right" />
       </body>
     </html>
   );
