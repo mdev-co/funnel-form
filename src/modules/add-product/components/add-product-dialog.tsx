@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -25,6 +26,9 @@ const DIALOG_TEXT = {
   next: 'Dalej',
   save: 'Zapisz produkt',
 };
+
+// Keyboard users land on the new step's first control instead of the dialog container.
+const FIRST_CONTROL_SELECTOR = 'input, textarea, button';
 
 type StepComponent = typeof BasicsStep | typeof PricingStep | typeof AvailabilityStep;
 
@@ -55,6 +59,12 @@ export function AddProductDialog({ open, onOpenChange, onSave }: AddProductDialo
 
   const CurrentStep = STEP_COMPONENT[wizard.step.id];
 
+  const stepRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    stepRef.current?.querySelector<HTMLElement>(FIRST_CONTROL_SELECTOR)?.focus();
+  }, [open, wizard.stepIndex]);
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
@@ -76,7 +86,7 @@ export function AddProductDialog({ open, onOpenChange, onSave }: AddProductDialo
             <DialogDescription className="sr-only">{DIALOG_TEXT.description}</DialogDescription>
           </DialogHeader>
           <StepIndicator steps={STEPS} currentIndex={wizard.stepIndex} />
-          <div className="px-4 py-5 max-sm:flex-1 max-sm:overflow-y-auto max-sm:py-4">
+          <div ref={stepRef} className="px-4 py-5 max-sm:flex-1 max-sm:overflow-y-auto max-sm:py-4">
             <CurrentStep form={wizard.form} />
           </div>
           <DialogFooter className="bg-muted/50 mx-0 mb-0 flex-row items-center justify-end border-t p-4">
