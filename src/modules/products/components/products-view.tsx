@@ -7,11 +7,11 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { AddProductDialog } from '@/modules/add-product/components/add-product-dialog';
 import type { AddProductInput } from '@/modules/add-product/schemas/add-product.schema';
-import { MOCK_PRODUCTS } from '../data/mock-products';
 import { paginate } from '../lib/paginate';
-import type { Product } from '../model/product';
 import { ProductsPagination } from './products-pagination';
 import { ProductsTable } from './products-table';
+import { formatProductCount } from '../lib/format-product-count';
+import { addProduct, useProducts } from '../lib/product-store';
 
 const PAGE_SIZE = 5;
 
@@ -19,11 +19,11 @@ const VIEW_TEXT = {
   title: 'Produkty',
   addProduct: 'Dodaj produkt',
   productAdded: 'Produkt został dodany',
-  catalogSize: (count: number) => `${count} produktów w katalogu`,
+  catalogSize: (count: number) => `${formatProductCount(count)} w katalogu`,
 };
 
 export function ProductsView() {
-  const [products, setProducts] = useState<readonly Product[]>(MOCK_PRODUCTS);
+  const products = useProducts();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [page, setPage] = useQueryState(
     'page',
@@ -31,8 +31,8 @@ export function ProductsView() {
   );
   const currentPage = paginate(products, page, PAGE_SIZE);
 
-  const addProduct = (input: AddProductInput) => {
-    setProducts((list) => [...list, { id: crypto.randomUUID(), ...input }]);
+  const saveProduct = (input: AddProductInput) => {
+    addProduct(input);
     toast.success(VIEW_TEXT.productAdded);
   };
 
@@ -59,7 +59,7 @@ export function ProductsView() {
           />
         </footer>
       </div>
-      <AddProductDialog open={dialogOpen} onOpenChange={setDialogOpen} onSave={addProduct} />
+      <AddProductDialog open={dialogOpen} onOpenChange={setDialogOpen} onSave={saveProduct} />
     </section>
   );
 }

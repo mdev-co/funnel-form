@@ -2,13 +2,14 @@ import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PaginationEllipsis } from '@/components/ui/pagination';
 import { paginationItems } from '../lib/pagination-items';
+import { formatProductCount } from '../lib/format-product-count';
 
 const PAGINATION_TEXT = {
   label: 'Paginacja',
   previous: 'Wstecz',
   next: 'Dalej',
   summary: (page: number, pageCount: number, total: number) =>
-    `Strona ${page} z ${pageCount} · ${total} produktów`,
+    `Strona ${page} z ${pageCount} · ${formatProductCount(total)}`,
 };
 
 type PageButtonsProps = {

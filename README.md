@@ -31,6 +31,32 @@ Data flow diagrams live in [`docs/diagrams`](docs/diagrams) (`.d2` sources rende
 - [Add product: validation at the form boundary](docs/diagrams/add-product-validation.svg)
 - [Add product: one form instance, steps as data, bound fields](docs/diagrams/add-product-form.svg)
 
+### Products table
+
+Five products from the task, five rows per page. The current page number is kept in the address
+bar as a query parameter (for example `/?page=2`) through
+nuqs, so a refresh or a shared link opens the same page; a number past the end falls back to the last
+page. Counts use Polish plural forms (`1 produkt`, `2 produkty`, `5 produktów`) via `Intl.PluralRules`.
+
+The list itself persists in `localStorage`, so an added product survives a reload or a page
+typed into the address bar. Stored data is parsed with the product Zod schema on read; corrupted
+or outdated data falls back to the five mock products. This is a demo choice: in production the
+list would live in a database behind an API (see [ADR 0004](docs/adr/0004-products-persist-in-local-storage.md)).
+
+![Products table](docs/screenshots/products-table.png)
+
+### Add product dialog
+
+One TanStack Form instance holds the values of all three steps, so "Wstecz" keeps what was typed.
+"Dalej" validates only the current step with its Zod schema and shows the messages under the fields;
+"Zapisz produkt" validates the whole product, appends it to the table and shows a toast. Closing the
+dialog (X or Esc) resets it to step one; clicking outside does not close it. Net price, gross price and
+VAT rate keep each other in sync. On small screens the dialog is a full-screen sheet.
+
+![Add product dialog, step 1](docs/screenshots/add-product-step-1.png)
+
+![Add product dialog on a phone](docs/screenshots/add-product-mobile.png)
+
 ## Validation rules
 
 Every rule from the task, where it lives and the test that proves it (`src/modules/add-product`).
@@ -62,5 +88,7 @@ Architecture decision records live in [`docs/adr`](docs/adr). Start with
 through the shadcn/ui theme instead of forked components, and which 2 px deviations are accepted.
 [0003](docs/adr/0003-one-form-instance-and-bound-fields.md) explains why the wizard is one form
 instance with steps as data and why fields are bound components.
+[0004](docs/adr/0004-products-persist-in-local-storage.md) explains why the product list persists in
+`localStorage` for the demo and how a production version would store it.
 
 © 2026 majk-develop. All rights reserved. Published for review purposes only.
