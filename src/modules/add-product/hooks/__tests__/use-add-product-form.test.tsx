@@ -102,6 +102,27 @@ describe('useAddProductForm', () => {
     expect(wizard().form.state.values.name).toBe('Sony WH-1000XM5');
   });
 
+  it('a failed submit goes back to the first step that has an error', async () => {
+    const wizard = mount();
+    act(() => {
+      fillBasics(wizard());
+      wizard().goNext();
+    });
+    act(() => {
+      wizard().form.setFieldValue('netPrice', 100);
+      wizard().form.setFieldValue('grossPrice', 123);
+      wizard().goNext();
+    });
+    expect(wizard().stepIndex).toBe(2);
+    act(() => {
+      wizard().form.setFieldValue('name', '');
+    });
+    await act(async () => {
+      await wizard().form.handleSubmit();
+    });
+    expect(wizard().stepIndex).toBe(0);
+  });
+
   it('reset returns to the first step with the defaults', () => {
     const wizard = mount();
     act(() => {

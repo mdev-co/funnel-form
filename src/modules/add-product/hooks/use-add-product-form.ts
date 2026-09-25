@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAppForm } from '@/lib/form/form-hook';
 import { issuesByField } from '../lib/issues-by-field';
 import { FORM_DEFAULTS } from '../model/form-values';
-import { FIRST_STEP_INDEX, LAST_STEP_INDEX, stepAt } from '../model/steps';
+import { FIRST_STEP_INDEX, LAST_STEP_INDEX, stepAt, stepIndexOfFields } from '../model/steps';
 import { addProductSchema, type AddProductInput } from '../schemas/add-product.schema';
 
 type UseAddProductFormOptions = {
@@ -20,6 +20,13 @@ export function useAddProductForm({ onSave }: UseAddProductFormOptions) {
     onSubmit: ({ value }) => {
       onSave(addProductSchema.parse(value));
       reset();
+    },
+    onSubmitInvalid: ({ value }) => {
+      const result = addProductSchema.safeParse(value);
+      if (result.success) return;
+      const invalidFields = new Set(result.error.issues.map((issue) => String(issue.path[0])));
+      const index = stepIndexOfFields(invalidFields);
+      if (index !== -1) setStepIndex(index);
     },
   });
 
