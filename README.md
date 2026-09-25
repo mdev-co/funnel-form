@@ -37,6 +37,11 @@ Five products from the task, five rows per page. The page number lives in the UR
 nuqs, so a refresh or a shared link opens the same page; a number past the end falls back to the last
 page. Counts use Polish plural forms (`1 produkt`, `2 produkty`, `5 produktów`) via `Intl.PluralRules`.
 
+The list itself persists in `localStorage`, so an added product survives a reload or a page
+typed into the address bar. Stored data is parsed with the product Zod schema on read; corrupted
+or outdated data falls back to the five mock products. This is a demo choice: in production the
+list would live in a database behind an API (see [ADR 0004](docs/adr/0004-products-persist-in-local-storage.md)).
+
 ![Products table](docs/screenshots/products-table.png)
 
 ### Add product dialog
@@ -80,5 +85,7 @@ Architecture decision records live in [`docs/adr`](docs/adr). Start with
 through the shadcn/ui theme instead of forked components, and which 2 px deviations are accepted.
 [0003](docs/adr/0003-one-form-instance-and-bound-fields.md) explains why the wizard is one form
 instance with steps as data and why fields are bound components.
+[0004](docs/adr/0004-products-persist-in-local-storage.md) explains why the product list persists in
+`localStorage` for the demo and how a production version would store it.
 
 © 2026 majk-develop. All rights reserved. Published for review purposes only.
