@@ -9,6 +9,7 @@ import { AddProductDialog } from '@/modules/add-product/components/add-product-d
 import type { AddProductInput } from '@/modules/add-product/schemas/add-product.schema';
 import { paginate } from '../lib/paginate';
 import { ProductsPagination } from './products-pagination';
+import { ProductsCards } from './products-cards';
 import { ProductsTable } from './products-table';
 import { formatProductCount } from '../lib/format-product-count';
 import { addProduct, useProducts } from '../lib/product-store';
@@ -48,9 +49,12 @@ export function ProductsView() {
           {VIEW_TEXT.addProduct}
         </Button>
       </header>
-      <div className="bg-card overflow-hidden rounded-lg border">
-        <ProductsTable products={currentPage.items} />
-        <footer className="border-t bg-gray-50 p-4">
+      <div className="md:bg-card md:overflow-hidden md:rounded-lg md:border">
+        <ProductsCards products={currentPage.items} className="md:hidden" />
+        <div className="hidden md:block">
+          <ProductsTable products={currentPage.items} />
+        </div>
+        <footer className="py-6 md:border-t md:bg-gray-50 md:p-4">
           <ProductsPagination
             page={currentPage.page}
             pageCount={currentPage.pageCount}

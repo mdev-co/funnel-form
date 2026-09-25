@@ -1,5 +1,3 @@
-import type { ReactNode } from 'react';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import {
   Table,
@@ -9,30 +7,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { formatPrice } from '../lib/format-price';
 import type { Product } from '../model/product';
+import { productCell, type ProductCell } from './product-cells';
 
 type ProductColumn = {
   readonly key: string;
   readonly label: string;
   readonly className?: string;
   readonly headClassName?: string;
-  readonly render: (product: Product) => ReactNode;
+  readonly render: ProductCell;
 };
-
-type Availability = 'available' | 'unavailable';
-
-type BadgeContent = {
-  readonly label: string;
-  readonly variant: 'success' | 'destructive';
-};
-
-const AVAILABILITY_BADGE: Record<Availability, BadgeContent> = {
-  available: { label: 'Dostępny', variant: 'success' },
-  unavailable: { label: 'Niedostępny', variant: 'destructive' },
-};
-
-const EMPTY_STOCK = '—';
 
 const COLUMNS: readonly ProductColumn[] = [
   {
@@ -40,42 +24,24 @@ const COLUMNS: readonly ProductColumn[] = [
     label: 'Nazwa',
     className: 'font-medium',
     headClassName: 'lg:w-[357px]',
-    render: (product) => product.name,
+    render: productCell.name,
   },
-  {
-    key: 'sku',
-    label: 'SKU',
-    className: 'text-muted-foreground',
-    render: (product) => product.sku,
-  },
+  { key: 'sku', label: 'SKU', className: 'text-muted-foreground', render: productCell.sku },
   {
     key: 'category',
     label: 'Kategoria',
     className: 'text-muted-foreground',
-    render: (product) => product.category,
+    render: productCell.category,
   },
   {
     key: 'grossPrice',
     label: 'Cena Brutto',
     className: 'font-medium',
-    render: (product) => formatPrice(product.grossPrice, product.currency),
+    render: productCell.grossPrice,
   },
-  {
-    key: 'availability',
-    label: 'Status',
-    render: (product) => <AvailabilityBadge available={product.available} />,
-  },
-  { key: 'stock', label: 'Magazyn', render: (product) => product.stock ?? EMPTY_STOCK },
+  { key: 'availability', label: 'Status', render: productCell.availability },
+  { key: 'stock', label: 'Magazyn', render: productCell.stock },
 ];
-
-type AvailabilityBadgeProps = {
-  readonly available: boolean;
-};
-
-function AvailabilityBadge({ available }: AvailabilityBadgeProps) {
-  const badge = AVAILABILITY_BADGE[available ? 'available' : 'unavailable'];
-  return <Badge variant={badge.variant}>{badge.label}</Badge>;
-}
 
 type ProductsTableProps = {
   readonly products: readonly Product[];

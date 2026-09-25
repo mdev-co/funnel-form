@@ -35,7 +35,7 @@ type StepIndicatorProps = {
 export const StepIndicator = ({ steps, currentIndex }: StepIndicatorProps) => (
   <ol
     aria-label={INDICATOR_TEXT.label}
-    className="flex gap-4 border-b px-4 py-3 max-sm:border-t md:items-center"
+    className="flex justify-between gap-4 border-b px-4 py-3 max-sm:border-t md:items-center md:justify-start"
   >
     {steps.map((step, index) => {
       const state = stepState(index, currentIndex);
@@ -44,7 +44,7 @@ export const StepIndicator = ({ steps, currentIndex }: StepIndicatorProps) => (
         <Fragment key={step.id}>
           <li
             aria-current={state === 'current' ? 'step' : undefined}
-            className="flex flex-1 flex-col gap-3 md:flex-none md:flex-row md:items-center"
+            className="flex flex-col gap-3 md:flex-row md:items-center"
           >
             <span
               className={cn(
